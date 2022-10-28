@@ -188,5 +188,25 @@ let moto : {marca: string, modelo:string , ano:number} = {
 
 }
 
+// Execício de objetos:
+/* Crie um objeto que se chama funcionário com:
+    - Array de Strings com nomes de dois supervisores;
+    -Função de bater ponto que recebe a hora(number) e retorna uma string;
+    -Ponto normal (<= 8);
+    -Fora do horário (> 8); */
 
+// Resposta:
+
+const funcionario : { supervisores:string[] , ponto: (marcacaoPonto: number) => string} = {
+
+    supervisores : ['Fulano' , 'Ciclano'],
+
+    ponto:  (marcacaoPonto: number ) => {
+        let ternarioPonto: string;
+        return ternarioPonto = marcacaoPonto <=8 ? 'Ponto normal' : 'Fora do horário' ;
+    },
+
+}
+
+console.log(funcionario.ponto(10));
 
