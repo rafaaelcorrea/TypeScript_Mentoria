@@ -210,3 +210,128 @@ const funcionario : { supervisores:string[] , ponto: (marcacaoPonto: number) => 
 
 console.log(funcionario.ponto(10));
 
+/*Definindo tipos personalizados ( Alias):
+Criamos o tipo personalizado "Funcionário" , um alias, que servirá como um modelo de tipagem para os objetos, assim
+dessa forma, podemos criar outros objetos que utilizaram essa "tipagem personalizada":
+*/
+
+// Criando  a personalização de tipagem do nosso objeto "default/padrão":
+type PadraoObjFuncionario = {   
+    supervisores: string[], 
+    baterPonto: (ponto: number) => string
+};
+
+let funcionario1 : PadraoObjFuncionario =  { /* Associação do tipo personalizado de tipagem que criamos para
+ este novo objeto . */
+    supervisores:['Carlos', 'Jéssica'],
+
+    baterPonto(marcacao: number): string  {
+        const ternarioPonto: string = marcacao <=8 ? 'Ponto normal' :' Fora do horário';
+        return ternarioPonto;
+
+    }
+
+}
+
+let funcionario2: PadraoObjFuncionario = { /* Associação do tipo personalizado de tipagem que criamos para
+este novo objeto . */
+
+    supervisores:['Ricardo','João'] ,
+
+    baterPonto(horas:number): string {
+        const ternarioPonto: string = horas <= 8 ? 'Ponto normal' : 'Fora do horário';
+        return ternarioPonto;
+    }
+
+}
+
+// Union types
+// É a capacidade de podermos tipificarmos uma variável com 2 ou mais opções de tipos pré-definidos;
+//Exemplo:
+
+let nota: number | string;
+nota = 10;
+nota = '10';
+//nota = [10]; // <<< Dá erro, pois não pré configuramos o tipo array.
+
+console.log( typeof(nota));
+
+// Never:
+/*É um tipo que é muito utilizado em funções , cuja a mesma nunca executa um bloco de código comum, pois
+ executa  algum um erro ou um tipo de looping.
+
+ Exemplo:
+ */
+
+ function exibirFalha( mensagem:string): never {
+
+  throw new Error(mensagem);
+   
+ }
+
+ const produto = {   // Obs.: Professor criou esse objeto sem tipa-lo!
+    nome: 10,
+    preco: 23,
+
+    validarDados()  {
+        const ternarioChecaDados = typeof this.nome != 'string' || isNaN(this.preco) ?  exibirFalha('Cheque o tipo do(s) dado(s) inserido(s)')
+        : this.preco <= 0 ? exibirFalha('Preço inválido!') : 'Tipos de dados válidos!'; 
+        
+        return ternarioChecaDados;
+    }
+ }
+
+console.log(produto.validarDados());
+
+// Exercício
+//Converta ao máximo o código abaixo de JS para TS:
+// 1º Forma de se fazer:
+
+// Objeto padrão contaBancária
+let contaBancaria01: {saldo: number , depositar: (valor: number) => number} = {
+    saldo: 3456,
+    depositar(valor: number) {
+        const adicaoValorMaisSaldo: number  = this.saldo += valor;
+        return adicaoValorMaisSaldo;
+    }
+}
+ // Objeto correntista cujo qual esta atrelado ao mesmo o objeto conta bancária
+let correntista01: {nome: string , contaBancaria01: any, contatos: string[] } = {
+    nome: 'Ana Silva',
+    contaBancaria01: contaBancaria01,
+    contatos: ['34567890', '98765432']
+}
+ 
+correntista01.contaBancaria01.depositar(3000);
+console.log(correntista01)
+
+//=====================================================
+// 2º forma de se fazer( tornando o objetos em tipo para ser usado em um ou em mais objetos):
+
+//Tornando em um tipo o objeto modelo
+type  ContaBancaria = {
+    saldo: number,
+    depositar: (valor: number) => void;
+}
+
+// Criando um objeto, cujo o mesmo será atribuido a tipagem personalizada que criamos
+let contaBancaria : ContaBancaria = {
+    saldo: 3000,
+    depositar: (valor: number) => this.saldo += valor
+}
+
+// Tornando em um tipo o objeto modelo
+
+type Correntista = {
+    nome: string,
+    contaBancaria: ContaBancaria,
+    contatos: string[],
+}
+
+//Criando um objeto, cujo o mesmo será atribuido a tipagem personalizada que criamos
+let correntista02: Correntista = {
+    nome:'Helena',
+    contaBancaria: contaBancaria,
+    contatos: ['9999-4655','3333-7777'],
+
+}
