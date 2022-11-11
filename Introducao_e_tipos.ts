@@ -335,3 +335,94 @@ let correntista02: Correntista = {
     contatos: ['9999-4655','3333-7777'],
 
 }
+
+//Alguns insights de configurações do TS no arquivo TSCONFIG.JSON
+
+let canal:string = 'petralhas';
+let inscritos: number = 5000;
+
+
+console.log(`Saída: ${canal}`);
+
+/*noEmitOnError:
+Para não deixarmos transpilarmos o programa de TS para JS com algum erro de TS,
+devemos antes adicionar o comando tsc , o " tsc --noEmitOnError nome_do_arquivo.ts "
+*/
+
+/* Target:
+Alterando essa propriedade, podemos mudar para uma versão do JS antiga ou mais recente.
+Quando um código e executado em TS é gerado/transpilado uma versão JS do mesmo e se o Target estiver com uam versão antiga
+o JS não executará o que foi proposto com um recurso mais atual e sim de uma maneira mais arcaíca. 
+*/
+
+/* Source Map:
+É usado para mostrar no console do browser o arquivo TS que roda por trás do JS.
+É mutio usado para debugar coisas em desenvolvimento.
+Podemos ativar com o true o sourceMap no tsconfig ou força-lo no terminal.
+Exemplo: tsc --sourceMap nome_do_arquivo.ts
+*/
+
+// Classes:
+
+class Aniversario01 {
+
+    //Atributios públicos:  
+    public dia:number;
+    public mes:number;
+    public ano:number;
+    
+
+    constructor(dia: number = 0, mes:number = 0, 
+        ano: number ) {   
+        this.dia = dia,
+        this.mes = mes,
+        this.ano = ano,
+        }
+
+}   
+
+const fulano = new Aniversario01 (27,02,1986);
+fulano.dia = 29;
+console.log(fulano)
+
+// CLasse de uma forma mais resumida:
+
+class Aniversario02 {
+    // Constructor já com as indicações de public
+    constructor(public dia: number = 99, public mes: number = 99 , public ano: number = 9999){
+        
+    }
+}
+
+const fulano02 = new Aniversario02(28,02,1997);
+
+// Desafio:
+//Crie uma classe que se chama Produto com os atributos que se chamam: nome, preco e o percentual de desconto.
+//Crie um método que realiza o desconto
+//Obs 1 .: o desconto é opcional e tem como valor padrão 0 .
+//Obs 2.: criar dos produtos passando dois e três parametros.
+
+class Produto {
+    constructor(public nome: string, public preco: number, 
+        public percentualDeDesconto: number = 0 ){
+
+    }
+
+    executaDesconto() :number {
+        const  executaDesconto: number =  (this.percentualDeDesconto / 100) * this.preco  ;
+        return executaDesconto;
+    }
+
+}
+
+
+const prod1 = new Produto('Coca-cola', 10 ,);
+const prod2 = new Produto('Wisky',200, 15);
+console.log(prod2);
+console.log(` Valor do preco com desconto ${prod2.executaDesconto()}`);
+
+
+//
+
+
+
