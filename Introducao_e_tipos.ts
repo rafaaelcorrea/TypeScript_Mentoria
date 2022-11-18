@@ -317,7 +317,7 @@ type  ContaBancaria = {
 // Criando um objeto, cujo o mesmo será atribuido a tipagem personalizada que criamos
 let contaBancaria : ContaBancaria = {
     saldo: 3000,
-    depositar: (valor: number) => this.saldo += valor
+    depositar: (valor: number) => this.saldo += valor,
 }
 
 // Tornando em um tipo o objeto modelo
@@ -374,14 +374,12 @@ class Aniversario01 {
 
     constructor(dia: number = 0, mes:number = 0, 
         ano: number ) {   
-        this.dia = dia,
-        this.mes = mes,
-        this.ano = ano,
+      
         }
 
 }   
 
-const fulano = new Aniversario01 (27,02,1986);
+const fulano = new Aniversario01 (27,2,1986);
 fulano.dia = 29;
 console.log(fulano)
 
@@ -394,7 +392,7 @@ class Aniversario02 {
     }
 }
 
-const fulano02 = new Aniversario02(28,02,1997);
+const fulano02 = new Aniversario02(28,2,1997);
 
 // Desafio:
 //Crie uma classe que se chama Produto com os atributos que se chamam: nome, preco e o percentual de desconto.
@@ -422,7 +420,169 @@ console.log(prod2);
 console.log(` Valor do preco com desconto ${prod2.executaDesconto()}`);
 
 
-//
+/* Modificadores de Acesso - private ,public e protected.
+Private: visível somente na própria classe.
+Protected: visível na própria classe e transmitido por herança.
+Public: vísivel/acessível em qualquer escopo e trasmitido por herança.
+*/
+
+class Carro {
+    private velocidadeAtual: number = 0;
+
+    constructor( public fabricante: string, public marca: string, 
+         private velocidadeMaxima: number = 200){
+        
+    }
+
+    // Método privado
+    private alterarVelocidade(delta: number): number {
+        const novaVelocidade = this.velocidadeAtual + delta;
+        
+        const velocidadeValida = novaVelocidade >= 0 
+        && novaVelocidade <= this.velocidadeMaxima;
+
+        if(velocidadeValida) {
+            this.velocidadeAtual = novaVelocidade;
+        } else {
+            this.velocidadeAtual = delta > 0 ? this.velocidadeMaxima : 0;
+        }
+
+        return this.velocidadeAtual;
+    }
+
+    // Métodos públicos que chamam o método privado.
+    public acelerar (velocidade: number) :number {
+        return this.alterarVelocidade(velocidade);
+    }
+    
+    public frear(velocidade: number) : number {
+        return this.alterarVelocidade(velocidade);
+    }
+}
+
+export{} /* Usei esse export para resolver um erro que apresentava na classe que falava de "Duplicate identifier".
+Esse export marca o nosso arquivo como um ES Module (Ecma  Script Módulo) */
+
+const  carro1 = new Carro('Volkswagen','T-Cross',140);
 
 
+/* Um jeito para executar o método acelerar 50 vezes:
+const valorDeRepeticoes :number = 50;
+for ( let i:number = 0 ; i <= valorDeRepeticoes; i ++ ) {
+    console.log(carro1.acelerar(5));
+}
+*/
+
+// Um jeito interessante que o professor para executar o método 50 vezes:
+// Fill Preenche os indices do objeto início ao fim;
+Array(50).fill(0).forEach(() =>{ console.log(carro1.acelerar(100))});
+
+// Herança
+
+class Moto {
+
+    constructor( public roda:string, public marca: string,  public modelo: string,
+         private velocidadeMaxima :number = 300 , public velocidadeAtual: number = 0 ){
+
+    }
+
+    // O protected pode ser transmitido por Herança e pode ser utilizado na classe pai
+    protected alterarVelocidade(velocidade: number) :number | string {
+
+            const novaVelocidade: number = this.velocidadeAtual + velocidade;
+            const velocidadeValida: any = novaVelocidade >= 0 && novaVelocidade <= this.velocidadeMaxima;
+        
+            const ternarioVelocidade =  velocidadeValida ? this.velocidadeAtual = novaVelocidade : 
+            this.velocidadeAtual = this.velocidadeMaxima;
+
+            return ternarioVelocidade;
+    }
+
+    public acelerar( acelerarVelocidade : number ) {
+        return  this.alterarVelocidade(acelerarVelocidade);
+    }
+
+    public frear( frearVelocidade : number ) {
+        return  this.alterarVelocidade(frearVelocidade);
+    }
+
+
+}
+
+/*
+const moto1 = new Moto ('liga-leve','Honda','CBX');
+moto1.acelerar(50);
+moto1.frear(-5);
+console.log(moto1);
+*/
+
+class Kawazaki extends Moto { // Herdou a classe Moto
+
+    constructor(roda: string , modelo:string, velocidadeMaxima: number){
+
+        super( roda,'KawazakiX', modelo, velocidadeMaxima)
+
+    }
+
+    public acelerar( acelerarVelocidade : number ) {
+        return  this.alterarVelocidade(acelerarVelocidade);
+    }
+
+    public frear( frearVelocidade : number ) {
+        return  this.alterarVelocidade(frearVelocidade);
+    }
+}
+
+
+const moto2 = new Kawazaki('RodaXT','Ninja-2000',700);
+
+moto2.acelerar(600);
+
+console.log(moto2);
+
+/*Getter e Setter.
+
+ Eles nos ajudam a encapsular/proteger/isolar propriedades e facilitar o trabalho com objetos.
+ Normalmente utilizamos quando precisamos fazer validações ou tratamentos antes de salvar um dados.
+ 
+ */
+
+ class Pessoa {
+
+    public idade = 0;
+
+    get IdadeX() {
+        return this.idade;
+    }
+
+    set idadeX(valorIdade: number) {
+        const ternarioIdade: number|string = valorIdade >= 0  && valorIdade < 120 ? this.idade = valorIdade : this.idade;
+    }
+
+}
+
+const pessoa1 = new Pessoa();
+pessoa1.idadeX = 37;
+console.log(pessoa1);   
+
+
+// Propriedade e métodos estátcos:
+// Propriedades e métodos categorizados como estáticos são somente acessiveis através classe e não estanciando objeto.
+/* Artigo do Stackoverflow: Muitas linguagens implementam essas funções de forma estática em uma classe específica para elementos matemáticos, 
+permitindo fazer, por exemplo: float valor = Math.sin(Math.PI);*/
+
+
+class Multiplicar {
+
+
+    static  calculovalor (valorA: number, valorB: number ) {
+    
+            const executaCalculo: number = valorA * valorB;
+            return executaCalculo;
+        }
+    
+    
+    }
+    
+    Multiplicar.calculovalor(5,5);
 
