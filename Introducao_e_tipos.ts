@@ -574,8 +574,7 @@ permitindo fazer, por exemplo: float valor = Math.sin(Math.PI);*/
 
 class Multiplicar {
 
-
-    static  calculovalor (valorA: number, valorB: number ) {
+    static  calculovalor ( valorA: number, valorB:number) {
     
             const executaCalculo: number = valorA * valorB;
             return executaCalculo;
@@ -586,3 +585,231 @@ class Multiplicar {
     
     Multiplicar.calculovalor(5,5);
 
+
+/*Classes Abstratas:
+São usadas como moldes para outras sub-classes.
+Pensa-se em um conceito de celular , ceuluar é abstrato, pois na verdade ninguém usa ele e na verdade usa modelos especificos
+que estão de baixo dessa categoria , como Galaxy 20S, Iphone 13 e etc.
+Obs.: esse conceito só existe no TS , no JS não existe classes abastratas. 
+Características dessa classe: ela não pode ser instanciada e também pode ficar inacabada, sem implmentação.
+Tais implementações vão ser de fato elaboradas dentro das classes filhas. 
+
+*/
+// Exemplo:
+abstract class Calculo {
+
+    protected resultado: number = 0;
+
+    // Método abstrato, sem impementalção...
+     abstract executar(...numeros: number[] ) : void;
+
+     //Método normal que retorna o resultado
+     pegarResultado(): number{
+        return this.resultado;
+
+     }
+
+}
+// Classes concretas que herdaram a classe abastrata:
+
+class Somar extends Calculo {
+
+    executar(...numeros: number[]) : void {
+
+        this.resultado = numeros.reduce( (acumulador, valorAtual ) =>  acumulador + valorAtual );
+    
+    }
+
+}
+
+class Multiplicar extends Calculo {
+
+    executar(...numeros: number[]) : void {
+
+        // Um exemplo que ilustra uma espeécie de  polimorfismo:
+        this.resultado = numeros.reduce( (acumulador, valorAtual ) =>  acumulador * valorAtual );
+    
+    }
+}
+
+const somar1 = new Somar();
+somar1.executar(2,3,4,5,6);
+somar1.pegarResultado();
+
+const multiplicar1 = new Multiplicar();
+somar1.executar(2,3,4,5,6);
+somar1.pegarResultado();
+
+
+// Constructor privado & Singleton:
+// Ele tornar o construtor privado e retorna apenas uma instância. 
+//É usado apenas quando queremos trabalhar com apenas uma instância. 
+
+class ClasseSingleton {
+
+    // Atributo privado que via guardar a instância:
+        private static instancia: ClasseSingleton = new ClasseSingleton();
+    
+        //Transformando o construtor em privado:
+        private constructor() {}
+    
+        //Método estatico que acessa a instacia única:
+        static pegarInstancia() {
+            return ClasseSingleton.instancia;
+        }
+    
+        agora() {
+            return new Date();
+        }
+    
+    }
+    
+    console.log(ClasseSingleton.pegarInstancia().agora());
+    
+    // Atributos readonly ( somente leitura) :
+    
+    class Aviao {
+        public readonly modelo: string ;
+    
+        constructor (modelo: string, public readonly prefixo: string,) {
+            this.modelo = modelo;
+        }   
+    
+    }
+    
+    const turboHelice = new Aviao('TU-114','PT-ABC');
+    //turboHelice.modelo ='XPTO-222';  // Dá erro , pois a propriedade é readonly
+    //turboHelice.prefixo ='ENG-ZXR'     // Dá erro , pois a propriedade é readonly
+    
+
+/* Excercício:
+ 1º Converta a funcão construtora JS para uma classe no TS:
+
+function Moto(nome) {
+    this.nome = nome;
+    this.velocidade = 0;
+ 
+    this.buzinar = function() {
+        console.log('Toooooooooot!');
+    }
+ 
+    this.acelerar= function(delta) {
+        this.velocidade = this.velocidade + delta;
+    }
+}
+*/
+
+//R:
+
+class Moto {
+    constructor(public nome: string , public velocidade: number = 0){
+
+     }
+
+    public buzinar(): string {
+        return `Toooooooooot!`;
+    }
+    
+    public acelerar(velocidadeDesejada: number): number {
+        return  this.velocidade = this.velocidade + velocidadeDesejada;
+       
+    }
+
+}
+
+const moto1: any = new Moto('Ducati',300);
+moto1.acelerar(50);
+console.log(moto1);
+
+/* Exercício 2 - Converta o código JS abaixo em duas classes TS e que uma delas use a Herança
+
+var objeto2D = {
+    base: 0,
+    altura: 0
+}
+ 
+var retangulo = Object.create(objeto2D)
+retangulo.base = 5
+retangulo.altura = 7
+retangulo.area = function() {
+    return this.base * this.altura
+}
+*/
+//R:
+
+  abstract class Objeto2D {
+      constructor(public base: number = 0, public altura: number = 0) {
+
+     }
+
+    abstract area(): number;
+}
+
+class Retangulo extends Objeto2D  {
+    constructor(base:number, altura:number){
+        super(base,altura);
+    }
+
+
+     area() {
+        const calculaArea = this.base * this.altura;
+        return calculaArea;
+    }
+}
+
+const retangulo1: any = new Retangulo(5,7);
+console.log(retangulo1);
+console.log(retangulo1.area());
+
+
+/* Exercício 3 - Getters & Setters:
+
+var estagiario = {
+    _primeiroNome: ''
+}
+ 
+Object.defineProperty(estagiario, 'primeiroNome', {
+    get: function () {
+        return this._primeiroNome
+    },
+    set: function (valor) {
+        if (valor.length >= 3) {
+            this._primeiroNome = valor
+        } else {
+            this._primeiroNome = ''
+        }
+    },
+    enumerable: true,
+    configurable: true
+})
+ 
+console.log(estagiario.primeiroNome)
+estagiario.primeiroNome = 'Le'
+console.log(estagiario.primeiroNome)
+estagiario.primeiroNome = 'Leonardo'
+console.log(estagiario.primeiroNome)
+
+*/
+
+class Estagiario {
+    constructor(public _primeiroNome:string =  ''){
+
+    }
+
+   public  get nomeX(){
+        return this._primeiroNome;
+    }
+
+  public  set nomeX(nomeDesejado: string){
+        if (nomeDesejado.length >= 3) {
+            this._primeiroNome = nomeDesejado;
+        } else {
+            this._primeiroNome = '';
+        }
+    }
+    
+}
+
+const estagiario1 = new Estagiario();
+estagiario1.nomeX ='Rafael';
+console.log(estagiario1.nomeX);
